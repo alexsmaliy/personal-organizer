@@ -1,0 +1,90 @@
+#left-menu {
+    /* position */
+    display: flex;
+    flex-direction: column;
+    /* dimension */
+    height: calc(100vh - 5.3em);
+    padding-top: 30px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    /* style */
+    background-color: var(--sidebar_background);
+    overflow-x: hidden;
+    overflow-y: hidden;
+    /* animation */
+    transition: width 0.15s linear;
+}
+
+#left-menu > .horizontal-line {
+    height: 1px;
+    background-color: gray;
+    opacity: 0.2;
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+}
+
+#left-menu.on {
+    width: 7em;
+}
+ 
+#left-menu.off {
+    width: 0em;
+    padding-right: 0em;
+}
+
+#left-menu > .item {
+    /* position */
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.1em;
+    /* dimension */
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 4px;
+    /* style */
+    font-size: 14px;
+    color: var(--sidebar_text);
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
+#left-menu > .item:hover {
+    background-color: var(--sidebar_hover);
+}
+
+#left-menu > .active {
+    font-weight: 600;
+    background-color: var(--sidebar_hover);
+}
+
+#left-menu > label {
+    cursor: pointer;
+}
+
+#left-menu > i {
+    margin-right: 0.3em;
+}
+ 
+#left-menu > .all > i {
+    color: var(--green);
+}
+
+#left-menu > .inbox > i {
+    color: var(--blue_light);
+}
+
+#left-menu > .star > i {
+    color: var(--orange);
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 50, 'opsz' 24;
+}
+
+#left-menu > .trash > i {
+    color: var(--red);
+}
+
+#left-menu > .archive > i {
+    color: var(--brown);
+}

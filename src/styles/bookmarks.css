@@ -1,0 +1,230 @@
+/* —————————————————————————————————————————————————————————————————————————————
+   Bookmark Container
+*/
+
+#bookmarks {
+    padding-top: 1em;
+    flex: 1;
+    margin-left: 0.4em
+ }
+
+ #bookmarks #breadcrumb {
+    margin-left: 0.4em;
+    margin-bottom: 0.4em;
+ }
+
+ #bookmarks h1 span {
+    color: gray;
+ }
+
+#bookmarks h1 .all {
+    color: var(--green);
+}
+
+#bookmarks h1 .inbox {
+    color: var(--blue_light);
+}
+#bookmarks h1 .trash {
+    color: var(--red);
+}
+#bookmarks h1 .archive {
+    color: var(--brown);
+}
+
+#bookmarks h1 .star {
+    color: var(--orange);
+}
+
+#bookmarks #breadcrumb {
+    font-size: 1.4em;
+ }
+
+ /* —————————————————————————————————————————————————————————————————————————————
+   Bookmark Unit
+*/
+
+.bookmark {
+    /* dimension */
+    line-height: 1em;
+    padding-left: 0.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    /* position */
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    /* style */
+    border-radius: 0.5em;
+ }
+
+ .bookmark#active {
+    background-color: #eee;
+ }
+
+ .bookmark .title {
+    font-size: 1em;
+    font-weight: 600;
+ }
+
+ .bookmark .url {
+    color: rgb(122, 122, 122);
+    text-decoration: none;
+    font-size: 0.8em;
+ }
+
+ .bookmark .about {
+    font-size: 0.85em;
+ }
+
+.bookmark .tag {
+    color: rgb(35, 84, 244);
+    text-decoration: none;
+    margin-right: 0.4em;
+    font-size: 0.8em;
+}
+
+.bookmark .tag:hover {
+    text-decoration: underline;
+}
+
+.bookmark mark {
+    background: none;
+    color: var(--red_dark);
+}
+
+ /* -----------------------------------------------------------------------------
+   Bookmark Controls
+*/
+
+.bookmark menu {
+    position: absolute;
+    right: 0;
+    z-index: 100;
+    display: none;
+    top: 50%;
+    transform: translateY(-50%);
+    user-select: none;
+    -webkit-user-select: none;
+ }
+
+.bookmark#active menu {
+    display: inline-block;
+}
+
+.bookmark menu i {
+    /* position */
+    margin-right: 0.5em;
+    /* dimension */
+    padding: 0.2em;
+    border-radius: 0.2em;
+    /* style */
+    cursor: pointer;
+    background-color: rgb(238, 238, 238);
+    border: 2px solid rgb(200, 200, 200);
+ }
+
+ .bookmark:hover menu .link:hover {
+    color: rgb(62, 136, 232);
+    border: 2px solid rgb(62, 136, 232);
+ }
+ 
+ .bookmark:hover menu .edit:hover {
+    color: rgb(6, 154, 6);
+    border: 2px solid rgb(6, 154, 6);
+ }
+ 
+ .bookmark:hover menu .delete:hover {
+    color: rgb(213, 6, 6);
+    border: 2px solid rgb(213, 6, 6);
+ }
+ 
+ .bookmark:hover menu .archive:hover {
+    color: var(--brown);
+    border: 2px solid var(--brown);
+ }
+
+ /* -----------------------------------------------------------------------------
+   Batch Edit Controls
+*/
+
+#edit {
+    margin-left: 0.5em;
+    margin-bottom: 0.5em;
+ }
+
+ #edit button {
+    margin: 0.5em;
+ }
+ 
+ #edit input {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 0.2em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin: 0.2em;
+    box-shadow:
+        inset 0 0 0 1px #fff,
+        inset 0 0 0 2px #fff,
+        inset 0 0 0 3px #fff,
+        inset 0 0 0 4px #fff,
+        inset 0 0 0 5px #fff,
+        inset 0 0 0 6px #fff,
+        inset 0 0 0 7px #fff,
+        inset 0 0 0 8px #fff,
+        inset 0 0 0 9px #fff,
+        inset 0 0 0 10px #fff,
+        inset 0 0 0 11px #fff,
+        inset 0 0 0 12px #fff,
+        inset 0 0 0 13px #fff,
+        inset 0 0 0 14px #fff,
+        inset 0 0 0 15px #fff,
+        inset 0 0 0 16px #fff,
+        inset 0 0 0 17px #fff,
+        inset 0 0 0 18px #fff,
+        inset 0 0 0 19px #fff,
+        inset 0 0 0 20px #fff,
+        inset 0 0 0 21px #fff,
+        inset 0 0 0 22px #fff,
+        inset 0 0 0 23px #fff,
+        inset 0 0 0 24px #fff,
+        inset 0 0 0 25px #fff,
+        inset 0 0 0 26px #fff,
+        inset 0 0 0 27px #fff,
+        inset 0 0 0 28px #fff,
+        inset 0 0 0 29px #fff,
+        inset 0 0 0 30px #fff,
+        inset 0 0 0 31px #fff,
+        inset 0 0 0 32px #fff,
+        inset 0 0 0 33px #fff,
+        inset 0 0 0 34px #fff,
+        inset 0 0 0
+ }
+ 
+ #edit input:active {
+    border: 2px solid gray;
+ }
+
+ /* —————————————————————————————————————————————————————————————————————————————
+   Celebration
+*/
+
+#celebration {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 3em;
+ }
+ 
+ #celebration i {
+    font-size: 8em;
+    color: var(--green);
+ }
+ 
+ #celebration h1 {
+    font-size: 1.4em;
+    color: black;
+ }
+ 

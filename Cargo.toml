@@ -19,9 +19,12 @@ leptos_router = { version = "0.5", features = ["nightly"] }
 sqlx = { version = "0.7", features = [ "macros", "runtime-tokio", "sqlite", "tls-native-tls" ], optional = true  }
 wasm-bindgen = "=0.2.87"
 serde = { version = "1.0.189", features = ["derive"] }
-uuid = { version = "1.4.1", features = [ "js", "v4", "fast-rng", "serde" ] }
+serde_json = "1.0.68"
+uuid = { version = "1.5.0", features = [ "js", "v4", "fast-rng", "serde" ] }
 futures = "0.3"
 snafu = "0.7"
+web-sys = { version = "0.3", features = [ "Element" ] }
+hashbrown = "0.14"
 
 [features]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]

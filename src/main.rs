@@ -10,14 +10,14 @@ mod types;
 async fn main() -> std::io::Result<()> {
     use std::time::Duration;
     use actix_files::Files;
-    use actix_web::{App, HttpServer, web::Data};
+    use actix_web::{App, HttpServer, web::Data, middleware::NormalizePath};
     use leptos::{get_configuration, logging};
     use leptos_actix::{generate_route_list, handle_server_fns, LeptosRoutes};
     use sqlx::{Executor, sqlite::{SqliteConnectOptions, SqlitePoolOptions}};
     use app::Omark;
-    use db::{CONNECTION_INIT_PRAGMAS, DB_INIT_PRAGMAS, INITIALIZE_SCHEMA, SQLITE_DB_FILENAME, run, run_in_txn};
+    use db::{CONNECTION_INIT_PRAGMAS, DB_INIT_PRAGMAS, INITIALIZE_SCHEMA, SQLITE_DB_FILENAME};
 
-    let conf = get_configuration(Some("./Cargo.toml")).await.unwrap();
+    let conf = get_configuration(Some("./Cargo.toml")).await.expect("unable to find Leptos config file!");
     let addr = conf.leptos_options.site_addr;
     let routes = generate_route_list(Omark);
 
@@ -37,10 +37,10 @@ async fn main() -> std::io::Result<()> {
         .connect_with(sqlite_opts)
         .await.expect("failed while initializing DB pool");
 
-    if let Err(e) = run_in_txn(&db_pool, INITIALIZE_SCHEMA, "initializing schema").await {
+    if let Err(e) = db::run_in_txn(&db_pool, INITIALIZE_SCHEMA, "initializing schema").await {
         panic!("{e}");
     }
-    if let Err(e) = run(&db_pool, DB_INIT_PRAGMAS, "running run-once pragmas").await {
+    if let Err(e) = db::run(&db_pool, DB_INIT_PRAGMAS, "running run-once pragmas").await {
         panic!("{e}");
     }
     logging::log!("finished initializing schema");
@@ -50,13 +50,17 @@ async fn main() -> std::io::Result<()> {
         let site_root = &leptos_options.site_root;
 
         App::new()
+            .wrap(NormalizePath::trim())
             .app_data(Data::new(db_pool.clone()))
-            .route("/api/{tail:.*}", handle_server_fns())
+            .app_data(Data::new(leptos_options.to_owned()))
             .service(Files::new("/pkg", format!("{site_root}/pkg"))) // serve JS/WASM/CSS from `pkg`
             .service(Files::new("/assets", site_root)) // serve other assets from the `assets` directory
             .service(favicon) // serve the favicon from /favicon.ico
+            // TODO: replace with invidivual icon SVG's from https://fonts.google.com/icons
+            .service(google_icons_woff2_font) // serve the font from /google_icons.woff2
+            .route("/api/{tail:.*}", handle_server_fns())
             .leptos_routes(leptos_options.to_owned(), routes.to_owned(), Omark)
-            .app_data(Data::new(leptos_options.to_owned()))
+            
         //.wrap(middleware::Compress::default())
     })
     .shutdown_timeout(10 /* seconds */)
@@ -69,12 +73,19 @@ async fn main() -> std::io::Result<()> {
 #[cfg(feature = "ssr")]
 #[actix_web::get("favicon.ico")]
 async fn favicon(opts: actix_web::web::Data<leptos::LeptosOptions>) -> impl actix_web::Responder {
-    use actix_files::NamedFile;
-
     let opts = opts.into_inner();
     let ref root = opts.site_root;
     let name = format!("{root}/favicon.ico");
-    NamedFile::open_async(name).await
+    actix_files::NamedFile::open_async(name).await
+}
+
+#[cfg(feature="ssr")]
+#[actix_web::get("google_icons.woff2")]
+async fn google_icons_woff2_font(opts: actix_web::web::Data<leptos::LeptosOptions>) -> impl actix_web::Responder {
+    let opts = opts.into_inner();
+    let ref root = opts.site_root;
+    let name = format!("{root}/google_icons.woff2");
+    actix_files::NamedFile::open_async(name).await
 }
 
 #[cfg(not(any(feature = "ssr", feature = "csr")))]

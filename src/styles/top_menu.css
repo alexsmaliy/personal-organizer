@@ -1,0 +1,40 @@
+#top-menu {
+    --top_background: rgb(247, 247, 247);
+    --top_color: #202020;
+    --top_hover: rgb(222, 222, 222);
+    /* position */
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    /* dimension */
+    height: 5.5vh;
+    padding-left: 15px;
+    padding-right: 15px;
+    /* style */
+    background-color: var(--top_background);
+    color: var(--top_color);
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.1));
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#top-menu i {
+    margin-right: 0.2em;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+#top-menu i:hover {
+    background-color: var(--top_hover);
+    cursor: pointer;
+ }
+ 
+ #top-menu .account {
+    font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 50, 'opsz' 24;
+ }
+ 
+ /* are these used? */
+ .home-icon {
+    color: rgb(222, 222, 222);
+ }
+ 

@@ -1,5 +1,6 @@
+use std::{thread, time::Duration};
 use futures::StreamExt;
-use leptos::*;
+use leptos::{*, logging::log};
 
 use crate::types::Bookmark;
 
@@ -7,8 +8,9 @@ use crate::types::Bookmark;
 pub(super) async fn get_bookmarks() -> Result<Vec<Bookmark>, ServerFnError> {
     use actix_web::web::Data; // serverside dependency
     use sqlx::{Pool, Sqlite}; // serverside dependency
+    
     leptos_actix::extract(|pool: Data<Pool<Sqlite>>| async move {
-        std::thread::sleep(std::time::Duration::from_millis(1250)); // TODO: remove after testing
+        thread::sleep(Duration::from_millis(500)); // TODO: remove after testing
         let pool = pool.as_ref();
         let mut result_stream = sqlx::query_as::<_, Bookmark>("SELECT * FROM bookmark").fetch(pool);
         let mut res = vec![];
@@ -18,7 +20,7 @@ pub(super) async fn get_bookmarks() -> Result<Vec<Bookmark>, ServerFnError> {
                 Ok(c) => res.push(c),
             }
         }
-        logging::log!("loaded {} bookmarks", res.len()); // TODO: remove
+        log!("loaded {} bookmarks", res.len()); // TODO: remove
         Ok(res)
     }).await.unwrap()
 }

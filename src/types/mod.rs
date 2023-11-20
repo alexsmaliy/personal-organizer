@@ -1,5 +1,42 @@
 use std::fmt::{Display, Formatter};
 
+#[derive(Clone, Copy)]
+pub(crate) enum AppView {
+    // "all" | "inbox" | "star" | "trash" | "search" | "archive"
+    ALL,
+    INBOX,
+    STAR,
+    TRASH,
+    SEARCH,
+    ARCHIVE,
+}
+
+impl Display for AppView {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        use AppView::*;
+        let v = vec![("a", 1), ("a", 2), ("b", 3)];
+        let v = v.into_iter().fold(hashbrown::HashMap::new(),
+            |mut acc: hashbrown::HashMap<&str, Vec<i32>>, (letter, n)| {
+                let x = acc.entry(letter).or_insert(vec![]).push(n);
+                acc
+            }).into_iter().map(|(a, b)| b);
+        write!(f, "{}", match self {
+            ALL => "all", ARCHIVE => "archive", INBOX => "inbox",
+            SEARCH => "search", STAR => "star", TRASH => "trash",
+        })
+    }
+}
+
+impl AsRef<str> for AppView {
+    fn as_ref(&self) -> &str {
+        use AppView::*;
+        match self {
+            ALL => "all", ARCHIVE => "archive", INBOX => "inbox",
+            SEARCH => "search", STAR => "star", TRASH => "trash",
+        }
+    }
+}
+
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct Bookmark {
     pub id: uuid::Uuid,
@@ -11,19 +48,26 @@ pub struct Bookmark {
     pub trash: bool,
 }
 
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+pub struct BookmarkWithTags {
+    pub bookmark: Bookmark,
+    pub tags: Vec<String>,
+}
+
 impl Display for Bookmark {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Bookmark: {}, {}, {}, {}", self.id, self.url, self.title, self.about)
+        write!(f, "Bookmark: {}, {}, {}, {}, {}|{}|{}",
+            self.id, self.url, self.title, self.about, self.star, self.archive, self.trash)
     }
 }
 
-pub struct Bookmarks(pub Vec<Bookmark>);
+// pub struct Bookmarks(pub Vec<Bookmark>);
 
-impl Display for Bookmarks {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(","))
-    }
-}
+// impl Display for Bookmarks {
+//     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+//         write!(f, "{}", self.0.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(","))
+//     }
+// }
 
 #[cfg(feature = "ssr")]
 impl sqlx::FromRow<'_, sqlx::sqlite::SqliteRow> for Bookmark {
@@ -31,6 +75,7 @@ impl sqlx::FromRow<'_, sqlx::sqlite::SqliteRow> for Bookmark {
         use sqlx::Row;
         let id: &str = row.try_get("id")?;
         let id = uuid::Uuid::try_parse(id);
+        let v: Box<dyn Display> = Box::new(AppView::ALL);
         // if let Err(uuid_parsing_error) = id {
         //     let e = sqlx::Error::ColumnDecode { index: "id".into(), source: Box::new(uuid_parsing_error) };
         //     return Err(e)

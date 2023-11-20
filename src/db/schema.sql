@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS bookmark_tag_link (
     , FOREIGN KEY   (bookmark_id)           REFERENCES  bookmark(id)    ON DELETE CASCADE
     , FOREIGN KEY   (tag_id)                REFERENCES  tag(id)         ON DELETE CASCADE
     , UNIQUE        (bookmark_id, tag_id)   ON CONFLICT IGNORE
-) STRICT;
+) STRICT, WITHOUT ROWID;
 
 CREATE TABLE IF NOT EXISTS settings (
       user_id   TEXT    NOT NULL
@@ -61,4 +61,4 @@ CREATE TABLE IF NOT EXISTS settings (
     , FOREIGN KEY   (user_id)   REFERENCES  user(id)    ON DELETE CASCADE
     , UNIQUE        (user_id)   ON CONFLICT REPLACE
     , CHECK         (home IN ('all', 'inbox'))
-) STRICT;
+) STRICT, WITHOUT ROWID;

@@ -1,0 +1,155 @@
+#command {
+    --command_modal_background: #FFFFFF;
+    --command_modal_border: #FFFFFF;
+    --command_input_background: #FFFFFF;
+    --command_input_text: #202020;
+    --command_menu_border: rgb(227, 225, 225);
+    --command_modal_headers: #202020;
+    --command_modal_text: #202020;
+    --command_modal_hover: #f0f0f0;
+    --command_kbd: rgb(227, 225, 225);
+}
+
+/* —————————————————————————————————————————————————————————————————————————————
+   Command Modal
+*/
+
+#command {
+    /* position */
+    position: absolute;
+    float: left;
+    left: 50%;
+    top: 30%;
+    padding-bottom: 0.2em;
+    transform: translate(-50%, -40%);
+    /* dimension */
+    min-width: 25em;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    /* style */
+    animation: entry 0.2s;
+    border-radius: 6px;
+    background-color: var(--command_modal_background);
+    border: 0.5px solid var(--command_modal_border);
+    box-shadow: rgba(0, 0, 0, 0.3)  0px 19px 38px,
+                rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+/* —————————————————————————————————————————————————————————————————————————————
+   Search
+*/
+
+#command input {
+    /* position */
+    padding-top: 0.5em;
+    padding-bottom: 0.4em;
+    /* dimension */
+    border-radius: 3px;
+    padding-left: 0.8em;
+    border: none;
+    line-height: 2.2em;
+    /* style */
+    background-color: var(--command_input_background);
+}
+ 
+#command input {
+    color: var(--command_input_text);
+    outline: none;
+}
+
+/* —————————————————————————————————————————————————————————————————————————————
+   Menus
+*/
+
+#command menu {
+    border-top: 1.8px solid var(--command_menu_border);
+}
+ 
+#command menu h1 {
+    /* position */
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+    /* dimension */
+    padding-left: 0.5em;
+    /* style */
+    font-size: 0.8em;
+    color: var(--command_modal_headers);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* —————————————————————————————————————————————————————————————————————————————
+   Menu Items
+*/
+
+#command i {
+    margin-right: 0.3em;
+}
+
+#command i.all {
+    color: var(--green);
+}
+
+#command i.inbox {
+    color: var(--blue_light);
+}
+
+#command i.star {
+    color: var(--orange);
+}
+
+#command i.trash {
+    color: var(--red);
+}
+
+#command i.archive {
+    color: var(--brown);
+}
+
+#command li {
+    /* position */
+    display: flex;
+    align-items: center;
+    /* dimension */
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+    padding-left: 0.5em;
+    border-left: 2px solid transparent;
+    /* style */
+    font-size: 0.9em;
+    color: var(--command_modal_text);
+    cursor: pointer;
+}
+
+#command menu li.active {
+    background-color: var(--command_modal_hover);
+    border-left: 2px solid var(--red_light);
+}
+ 
+#command menu li kbd {
+    /* position */
+    margin-left: auto;
+    margin-right: 1em;
+    /* dimension */
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    /* style */
+    background-color: var(--command_kbd);
+    color: black;
+    border-radius: 15%;
+    font-family: Menlo, monospace;
+}
+
+/* —————————————————————————————————————————————————————————————————————————————
+   Animation
+*/
+
+/* move up + fade in */
+@keyframes entry {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -35%);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0);
+    }
+}

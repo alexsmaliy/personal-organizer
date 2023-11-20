@@ -1,5 +1,4 @@
-@use "src/app.scss";
-body {
-	font-family: sans-serif;
-	text-align: center;
-}
+@use "src/styles/bookmarks.css";
+@use "src/styles/command_modal.css";
+@use "src/styles/left_menu.css";
+@use "src/styles/top_menu.css";
