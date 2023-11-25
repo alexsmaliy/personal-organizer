@@ -2,7 +2,7 @@ mod app;
 mod components;
 mod db;
 mod errors;
-mod server_fns;
+mod functions;
 mod types;
 
 #[cfg(feature = "ssr")]

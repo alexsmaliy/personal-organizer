@@ -6,8 +6,7 @@ use crate::components::providers::{LeftMenuState, MenuState};
 
 #[component]
 pub(crate) fn LeftMenu() -> impl IntoView {
-    let MenuState { left_menu: LeftMenuState { open, .. }, .. } =
-        use_context().expect("did not find menu state in context");
+    let MenuState { left_menu: LeftMenuState { open, .. }, .. } = expect_context();
 
     view! {
         <menu id="left-menu" class={move || if open() { "on" } else { "off" }}>

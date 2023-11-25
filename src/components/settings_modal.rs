@@ -7,7 +7,7 @@ use crate::components::providers::MenuState;
 
 #[component]
 pub(crate) fn SettingsModal() -> impl IntoView {
-    let MenuState { settings_modal, .. } = use_context().expect("menu state not found in context!");
+    let MenuState { settings_modal, .. } = expect_context();
     
     let force_local_rendering = create_local_resource(|| (), |_| async { true });
 
@@ -25,7 +25,7 @@ pub(crate) fn SettingsModal() -> impl IntoView {
 
 #[component]
 fn SettingsModalInner() -> impl IntoView {
-    let MenuState { settings_modal, .. } = use_context().expect("menu state not found in context!");
+    let MenuState { settings_modal, .. } = expect_context();
 
     let form_ref: NodeRef<Form> = create_node_ref();
     let overlay_ref: NodeRef<Div> = create_node_ref();

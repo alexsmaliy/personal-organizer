@@ -2,7 +2,6 @@ use std::ops::Deref;
 use std::rc::Rc;
 use leptos::*;
 use leptos::html::{Input, Nav};
-use leptos::logging::log;
 use leptos_router::{NavigateOptions, use_navigate};
 use wasm_bindgen::JsCast;
 use web_sys::{Element, Event, HtmlElement, KeyboardEvent};
@@ -12,8 +11,7 @@ use crate::types::AppView;
 
 #[component]
 pub(crate) fn CommandModal() -> impl IntoView {
-    let MenuState { command_modal: CommandModalState { open, .. }, .. } =
-        use_context().expect("didn't find menu state in context!");
+    let MenuState { command_modal: CommandModalState { open, .. }, .. } = expect_context();
 
     let force_local_rendering = create_local_resource(|| (), |_| async { true });
 
@@ -31,7 +29,7 @@ pub(crate) fn CommandModal() -> impl IntoView {
 
 #[component]
 fn CommandModalInner() -> impl IntoView {
-    let MenuState { add_modal, command_modal, left_menu, .. } = use_context().expect("menu state should be provided!");
+    let MenuState { add_modal, command_modal, left_menu, .. } = expect_context();
 
     let nav_ref: NodeRef<Nav> = create_node_ref();
     let input_ref: NodeRef<Input> = create_node_ref();
@@ -50,7 +48,7 @@ fn CommandModalInner() -> impl IntoView {
     input_ref.on_load(move |inner| {
         inner.deref().set_attribute("class", "portal");
         request_animation_frame(move || {   
-            let _ = inner.focus();
+            inner.focus();
             command_modal.set_cursor.set(0);
         });
     });

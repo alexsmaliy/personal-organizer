@@ -3,7 +3,7 @@ use leptos_router::*;
 
 use crate::components::{AddModal, Bookmarks, CommandModal, Hotkeys, LeftMenu, SettingsModal, TopMenu};
 use crate::components::providers::{BookmarksProvider, BookmarksResource, CommandModalState, MenuState, MenuStateProvider, UrlStateProvider, UrlState};
-use crate::server_fns::get_bookmarks;
+use crate::functions::get_bookmarks;
 use crate::types::Bookmark;
 
 fn session() {
@@ -71,7 +71,7 @@ pub(crate) fn Home() -> impl IntoView {
                         <section class="flex">
                             <LeftMenu />
                             {
-                                let UrlState { view, .. } = use_context().expect("no url state resource in context!");
+                                let UrlState { view, .. } = expect_context();
                                 move || {
                                     match view().as_ref() {
                                         ref s if views.contains(s) =>

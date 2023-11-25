@@ -6,8 +6,7 @@ use crate::types::Bookmark;
 
 #[component]
 pub(crate) fn Bookmarks() -> impl IntoView {
-    let bookmarks_resource: BookmarksResource =
-        use_context().expect("no bookmarks resource provided by context!");
+    let bookmarks_resource: BookmarksResource = expect_context();
 
     let bookmarks_view_with_fallbacks = move || {
         bookmarks_resource.with(|res| match res {

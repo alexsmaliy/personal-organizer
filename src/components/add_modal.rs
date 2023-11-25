@@ -8,8 +8,7 @@ use crate::types::{Bookmark, BookmarkWithTags};
 
 #[component]
 pub(crate) fn AddModal() -> impl IntoView {
-    let MenuState { add_modal: AddModalState { open, .. }, .. } =
-        use_context().expect("didn't find add modal state in context!");
+    let MenuState { add_modal: AddModalState { open, .. }, .. } = expect_context();
     
     let force_local_rendering = create_local_resource(|| (), |_| async { true });
 
@@ -39,7 +38,7 @@ fn AddModalInner() -> impl IntoView {
         url, set_url,
         about, set_about,
         tags, set_tags,
-        .. }, .. } = use_context().expect("didn't find add modal state in context!");
+        .. }, .. } = expect_context();
 
     form_ref.on_load(move |inner| {
         inner.deref().set_attribute("class", "portal");

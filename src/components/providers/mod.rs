@@ -2,7 +2,7 @@ use std::time::Duration;
 use leptos::*;
 use leptos_dom::helpers::set_timeout;
 use leptos_router::use_params_map;
-use crate::server_fns::get_bookmarks;
+use crate::functions::get_bookmarks;
 use crate::types::Bookmark;
 
 pub(crate) type BookmarksResource = Resource<(), Result<Vec<Bookmark>, ServerFnError>>;
