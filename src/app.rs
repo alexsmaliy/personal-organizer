@@ -24,12 +24,17 @@ pub fn Omark() -> impl IntoView {
                 <Suspense fallback=move || view! {<p>"APP LOADING"</p>}> // TODO: is fallback useful?
                     <ErrorBoundary fallback=|errs| view! {
                         <ul>
-                            {move || errs().into_iter().map(|(_, e)| view! { <li>{e.to_string()}</li>}).collect_view()}
+                            {
+                                move || errs().into_iter().map(|(_, e)| view! {
+                                    <li>{e.to_string()}</li>
+                                }).collect_view()
+                            }
                         </ul>
                     }>
                         // <NetworkProvider> // TODO: was this finished/used in the original version?
                         // </NetworkProvider>
                         <Routes>
+                            <Route path="/moo" view=move || view! {<div>"Moo view"</div>}.into_view() />
                             <Route path="/:view/:tags?" view=Home />
                             // <Route path="/:view" view=|| view! { <div>"No view matched in router!"</div> } />
                         </Routes>

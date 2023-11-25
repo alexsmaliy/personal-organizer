@@ -31,33 +31,29 @@ pub(crate) fn CommandModal() -> impl IntoView {
 
 #[component]
 fn CommandModalInner() -> impl IntoView {
-    let MenuState { command_modal, left_menu } = use_context().expect("menu state should be provided!");
-    let go = use_navigate();
+    let MenuState { add_modal, command_modal, left_menu, .. } = use_context().expect("menu state should be provided!");
 
     let nav_ref: NodeRef<Nav> = create_node_ref();
     let input_ref: NodeRef<Input> = create_node_ref();
 
-    let global_click_listener = window_event_listener(ev::click, move |event| {
+    let click_listener = window_event_listener(ev::click, move |event| {
         let nav_ref = nav_ref.get_untracked().expect("nav should exist by now");
         let nav: &HtmlElement = nav_ref.deref();
         let clicked_element = event.target().unwrap().unchecked_into::<Element>();
-        if nav.contains(Some(&clicked_element)) {
-            log!("div contains click target!");
-        } else {
-            log!("div doesn't contains click target!");
+        if !nav.contains(Some(&clicked_element)) {
+            command_modal.close();
         }
     });
 
-    on_cleanup(move || {
-        global_click_listener.remove();
-    });
+    on_cleanup(move || click_listener.remove());
 
-    input_ref.on_load(move |inner| request_animation_frame(
-        move || {   
+    input_ref.on_load(move |inner| {
+        inner.deref().set_attribute("class", "portal");
+        request_animation_frame(move || {   
             let _ = inner.focus();
             command_modal.set_cursor.set(0);
-        }
-    ));
+        });
+    });
 
     let go = Rc::new(use_navigate());
 
@@ -72,7 +68,7 @@ fn CommandModalInner() -> impl IntoView {
             (SEARCH,  view! { <Icon icon="search"      classes="search" /> }),
         ];
         
-        let items = vec![
+        let items: Vec<MenuCategory> = vec![
             MenuCategory {
                 index: 0,
                 section: "Actions".into(),
@@ -84,6 +80,7 @@ fn CommandModalInner() -> impl IntoView {
                         label: "Add bookmark".into(),
                         action: create_action(move |_| async move {
                             command_modal.close();
+                            add_modal.open();
                         }),
                     },
                     MenuItem {
@@ -151,7 +148,7 @@ fn CommandModalInner() -> impl IntoView {
 
     let flat_menu = Signal::derive(move || {
         let search = command_modal.search.get().to_lowercase();
-        let items = menu_items().into_iter()
+        let items: Vec<_> = menu_items().into_iter()
             .flat_map(|MenuCategory { section, items, index }| {
                 items.into_iter().map(move |item| (item, section.clone(), index))
             })
@@ -162,12 +159,12 @@ fn CommandModalInner() -> impl IntoView {
             .map(|(index, (item, section, cat_index))|
                 (section, cat_index, MenuItem { index: Some(index), ..item })
             )
-            .collect::<Vec<_>>();
+            .collect();
         items
     });
 
     let tall_menu = Signal::derive(move || {
-        let mut items = flat_menu().into_iter()
+        let mut items: Vec<_> = flat_menu().into_iter()
             .fold(
                 hashbrown::HashMap::new(),
                 |mut acc, (section, cat_index, item)| {
@@ -179,7 +176,7 @@ fn CommandModalInner() -> impl IntoView {
             .map(|((section, cat_index), items)|
                 MenuCategory { section, items, index: cat_index }
             )
-            .collect::<Vec<_>>();
+            .collect();
         items.sort_by_cached_key(|m| m.index);
         items
     });
@@ -217,40 +214,40 @@ fn CommandModalInner() -> impl IntoView {
     };
 
     view! {
-      <nav id="command" node_ref=nav_ref on:keydown=Δkey>
-        <input placeholder="search" value=search on:input=Δsearch node_ref=input_ref />
-        <Show when=move || !tall_menu().is_empty() fallback=|| view! { <menu><h1>"No results"</h1></menu> }>
-          <For
-            each=store_value(tall_menu())
-            key=|category| category.index
-            children=move |MenuCategory { section, items, .. }| view! {
-              <menu>
-                <h1>{section}</h1>
-                <ul>
-                  <For
-                    each=store_value(items)
-                    key=|menu_item| menu_item.index.unwrap()
-                    children=move |MenuItem { index: i, action, icon, label, hotkey }| view! {
-                      <li
-                        class:active=create_memo(move |_| cursor() == i.unwrap())
-                        on:click=move |_| action.dispatch(())
-                        on:mousemove=move |_| set_cursor(i.unwrap())>
-                        {icon}
-                        <span>{label}</span>
-                        {
-                          hotkey.map_or_else(
-                             || view! {}.into_view(),
-                            |h| view! { <kbd>{h}</kbd> }.into_view())
-                        }
-                      </li>
+        <nav id="command" node_ref=nav_ref on:keydown=Δkey>
+            <input placeholder="search" value=search on:input=Δsearch node_ref=input_ref />
+            <Show when=move || !tall_menu().is_empty() fallback=|| view! { <menu><h1>"No results"</h1></menu> }>
+                <For
+                    each=store_value(tall_menu())
+                    key=|category| category.index
+                    children=move |MenuCategory { section, items, .. }| view! {
+                        <menu>
+                            <h1>{section}</h1>
+                            <ul>
+                                <For
+                                    each=store_value(items)
+                                    key=|menu_item| menu_item.index.unwrap()
+                                    children=move |MenuItem { index: i, action, icon, label, hotkey }| view! {
+                                        <li
+                                            class:active=create_memo(move |_| cursor() == i.unwrap())
+                                            on:click=move |_| action.dispatch(())
+                                            on:mousemove=move |_| set_cursor(i.unwrap())>
+                                            {icon}
+                                            <span>{label}</span>
+                                            {
+                                                hotkey.map_or_else(
+                                                     || view! {}.into_view(),
+                                                    |h| view! { <kbd>{h}</kbd> }.into_view())
+                                            }
+                                        </li>
+                                    }
+                                />
+                            </ul>
+                        </menu>
                     }
-                  />
-                </ul>
-              </menu>
-            }
-          />
-        </Show>
-      </nav>
+                />
+            </Show>
+        </nav>
     }
 }
 

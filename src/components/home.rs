@@ -1,10 +1,14 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::components::{Bookmarks, CommandModal, LeftMenu, TopMenu};
+use crate::components::{AddModal, Bookmarks, CommandModal, Hotkeys, LeftMenu, SettingsModal, TopMenu};
 use crate::components::providers::{BookmarksProvider, BookmarksResource, CommandModalState, MenuState, MenuStateProvider, UrlStateProvider, UrlState};
 use crate::server_fns::get_bookmarks;
 use crate::types::Bookmark;
+
+fn session() {
+
+}
 
 #[component]
 pub(crate) fn Home() -> impl IntoView {
@@ -59,38 +63,36 @@ pub(crate) fn Home() -> impl IntoView {
         // </Transition>
         // TODO: remove all this above
         <div class="home">
-          <BookmarksProvider>
-            <UrlStateProvider>
-            <MenuStateProvider>
-              <TopMenu />
-              <section class="flex">
-                <LeftMenu />
-                {
-                  let UrlState { view, .. } = use_context().expect("no url state resource in context!");
-                  
-                  move || {
-                    
-                    match view().as_ref() {
-                      ref s if views.contains(s) =>
-                          view! { <Bookmarks /> },
-                      "search" =>
-                          view! { <div>"search view!"</div> }.into_view(),
-                      "stats" =>
-                          view! { <div>"stats view!"</div> }.into_view(),
-                      _ =>
-                          view! { <div>"No view!"</div> }.into_view()
-                    }
-                  }
-                }
-              </section>
-              // <Hotkeys />
-              // <AddModal />
-              <CommandModal />
-              // <SettingsModal />
-              // <UpdateModal />
-              </MenuStateProvider>
-            </UrlStateProvider>
-          </BookmarksProvider>
+            <BookmarksProvider>
+                <UrlStateProvider>
+                    <MenuStateProvider>
+                        <SettingsModal />
+                        <TopMenu />
+                        <section class="flex">
+                            <LeftMenu />
+                            {
+                                let UrlState { view, .. } = use_context().expect("no url state resource in context!");
+                                move || {
+                                    match view().as_ref() {
+                                        ref s if views.contains(s) =>
+                                            view! { <Bookmarks /> },
+                                        "search" =>
+                                            view! { <div>"search view!"</div> }.into_view(),
+                                        "stats" =>
+                                            view! { <div>"stats view!"</div> }.into_view(),
+                                        _ =>
+                                            view! { <div>"No view!"</div> }.into_view()
+                                    }
+                                }
+                            }
+                        </section>
+                        <Hotkeys />
+                        <AddModal />
+                        <CommandModal />
+                        // <UpdateModal />
+                    </MenuStateProvider>
+                </UrlStateProvider>
+            </BookmarksProvider>
         </div>
     }
 }

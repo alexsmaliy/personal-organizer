@@ -2,7 +2,6 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Clone, Copy)]
 pub(crate) enum AppView {
-    // "all" | "inbox" | "star" | "trash" | "search" | "archive"
     ALL,
     INBOX,
     STAR,

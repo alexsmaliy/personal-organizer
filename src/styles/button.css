@@ -1,0 +1,90 @@
+:root {
+    --red_darker: rgb(163, 69, 56);
+    --red_dark: rgb(203, 87, 72);
+    --gray_light: rgb(242, 242, 242);
+    --gray_darker: rgb(229, 229, 229);
+    --text_gray_light: rgb(71, 71, 71);
+    --text_gray_dark: black;
+ }
+ 
+ /* —————————————————————————————————————————————————————————————————————————————
+    Button :: Gray
+ */
+ 
+.buttongray {
+    /* dimensions */
+    border: none;
+    padding: 0.4em 1em;
+
+    /* style */
+    font-size: 0.9em;
+    font-weight: 600;
+    border-radius: 5px;
+    line-height: 1.6em;
+
+    /* colors */
+    background-color: var(--gray_light);
+    color: var(--text_gray_dark);
+}
+ 
+.buttongray:hover {
+    background-color: var(--gray_darker);
+}
+ 
+.buttongray:active {
+    transform: scale(0.95);
+}
+ 
+ /* —————————————————————————————————————————————————————————————————————————————
+    Button :: Red
+ */
+ 
+.buttonred {
+    /* dimensions */
+    border: none;
+    padding: 0.4em 1em;
+
+    /* style */
+    font-size: 0.9em;
+    font-weight: 600;
+    border-radius: 5px;
+    line-height: 1.6em;
+
+    /* colors */
+    background-color: var(--red_dark);
+    color: white;
+}
+ 
+.buttonred:hover {
+    background-color: var(--red_darker);
+}
+
+.buttonred:active {
+    transform: scale(0.95);
+}
+ 
+ /* —————————————————————————————————————————————————————————————————————————————
+    Button :: Green
+ */
+ 
+ .buttongreen {
+    /* dimensions */
+    border: none;
+    padding: 0.4em 1em;
+    /* style */
+    font-size: 0.9em;
+    font-weight: 600;
+    border-radius: 5px;
+    line-height: 1.6em;
+    /* colors */
+    background-color: rgb(0, 128, 0);
+    color: white;
+}
+ 
+.buttongreen:hover {
+    background-color: rgb(2, 86, 2);
+}
+ 
+.buttongreen:active {
+    transform: scale(0.95);
+}

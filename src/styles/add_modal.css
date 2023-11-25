@@ -1,0 +1,86 @@
+#modal {
+    --command_modal_background: #FFFFFF;
+    --command_modal_border: #FFFFFF;
+    --command_input_background: #FFFFFF;
+    --command_input_text: #202020;
+    --command_menu_border: rgb(227, 225, 225);
+    --command_modal_headers: #202020;
+    --command_modal_text: #202020;
+    --command_modal_hover: #f0f0f0;
+    --command_q_icon: rgb(227, 225, 225);
+ 
+    /* position */
+    position: absolute;
+    float: left;
+    left: 50%;
+    top: 30%;
+    padding: 1em;
+    transform: translate(-50%, -50%);
+    /* dimension */
+    min-width: 25em;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    /* style */
+    border-radius: 6px;
+    background-color: var(--command_modal_background);
+    border: 0.5px solid var(--command_modal_border);
+    box-shadow: rgba(0, 0, 0, 0.3)  0px 19px 38px,
+                rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+#modal fieldset {
+    display: flex;
+    margin-bottom: 0.5em;
+    justify-content: space-between;
+}
+
+#modal section {
+    margin-bottom: 0.5em;
+}
+
+#modal input, #modal textarea {
+    /* position */
+    margin-left   : 0.6em;
+
+    /* dimensions */
+    padding-left  : 0.5em;
+    padding-right : 0.5em;
+    flex: 5;
+
+    /* style */
+    border: none;
+}
+
+#modal label {
+    flex: 1;
+}
+
+/* —————————————————————————————————————————————————————————————————————————————
+   Animation
+*/
+
+#modal.enter {
+    animation: entry 0.2s;
+}
+
+#modal.exit {
+    animation: exit  0.2s;
+}
+
+/* move up + fade in */
+@keyframes entry {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0);
+    }
+}
+
+@keyframes exit {
+    to {
+        opacity: 0;
+        transform: translate(-50%, -35%);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0);
+    }
+}
