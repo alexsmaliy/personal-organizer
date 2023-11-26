@@ -5,6 +5,7 @@ mod home;
 mod hotkeys;
 mod icon;
 mod left_menu;
+mod login_page;
 mod settings_modal;
 mod top_menu;
 
@@ -17,6 +18,7 @@ pub(crate) use home::Home;
 pub(crate) use hotkeys::Hotkeys;
 pub(crate) use icon::Icon;
 pub(crate) use left_menu::LeftMenu;
+pub(crate) use login_page::LoginPage;
 pub(crate) use settings_modal::SettingsModal;
 pub(crate) use top_menu::TopMenu;
 

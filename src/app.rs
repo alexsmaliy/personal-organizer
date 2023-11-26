@@ -2,7 +2,7 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
-use crate::components::Home;
+use crate::components::{Home, LoginPage};
 
 #[component]
 pub fn Omark() -> impl IntoView {
@@ -34,7 +34,7 @@ pub fn Omark() -> impl IntoView {
                         // <NetworkProvider> // TODO: was this finished/used in the original version?
                         // </NetworkProvider>
                         <Routes>
-                            <Route path="/moo" view=move || view! {<div>"Moo view"</div>}.into_view() />
+                            <Route path="/login" view=LoginPage />
                             <Route path="/:view/:tags?" view=Home />
                             // <Route path="/:view" view=|| view! { <div>"No view matched in router!"</div> } />
                         </Routes>
