@@ -13,8 +13,8 @@ pub(crate) fn AddModal() -> impl IntoView {
     let force_local_rendering = create_local_resource(|| (), |_| async { true });
 
     view! {
-        <Suspense fallback=|| view! {}.into_view() >
-            {if force_local_rendering.get().is_some() { view! {}.into_view() } else { view! {}.into_view() }}
+        <Suspense fallback=|| ().into_view() >
+            {if force_local_rendering.get().is_some() { ().into_view() } else { ().into_view() }}
             <Show when=open>
                 <Portal>
                     <AddModalInner />

@@ -16,8 +16,8 @@ pub(crate) fn CommandModal() -> impl IntoView {
     let force_local_rendering = create_local_resource(|| (), |_| async { true });
 
     view! {
-        <Suspense fallback=|| view! {}.into_view() >
-            {if force_local_rendering.get().is_some() { view! {}.into_view() } else { view! {}.into_view() }}
+        <Suspense fallback=|| ().into_view() >
+            {if force_local_rendering.get().is_some() { ().into_view() } else { ().into_view() }}
             <Show when=open>
                 <Portal>
                     <CommandModalInner />
@@ -234,7 +234,7 @@ fn CommandModalInner() -> impl IntoView {
                                             <span>{label}</span>
                                             {
                                                 hotkey.map_or_else(
-                                                     || view! {}.into_view(),
+                                                     || ().into_view(),
                                                     |h| view! { <kbd>{h}</kbd> }.into_view())
                                             }
                                         </li>

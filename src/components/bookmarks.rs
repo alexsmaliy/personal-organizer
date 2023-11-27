@@ -60,7 +60,7 @@ fn Bookmark(bookmark: Bookmark) -> impl IntoView {
                     if trash {
                         view! { <Icon icon="restore_from_trash" classes="delete" /> }
                     } else {
-                        view! {}.into_view()
+                        ().into_view()
                     }
                 }
                 <Icon icon={if trash {"delete_forever"} else {"delete"}} classes="delete" />
