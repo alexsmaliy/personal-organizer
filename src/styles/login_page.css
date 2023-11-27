@@ -100,6 +100,17 @@
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+#login button:disabled {
+    background-color: var(--gray_light);
+    color: var(--text_gray_dark);
+    text-shadow: unset;
+ }
+
+input.invalid {
+    text-decoration-skip-ink: all;
+    text-decoration: underline solid var(--red_light) 4px;
+}
+
 /* list of features */
 #loginpage #features {
     margin: 1em;

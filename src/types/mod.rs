@@ -74,7 +74,7 @@ impl sqlx::FromRow<'_, sqlx::sqlite::SqliteRow> for Bookmark {
         use sqlx::Row;
         let id: &str = row.try_get("id")?;
         let id = uuid::Uuid::try_parse(id);
-        let v: Box<dyn Display> = Box::new(AppView::ALL);
+        // let v: Box<dyn Display> = Box::new(AppView::ALL);
         // if let Err(uuid_parsing_error) = id {
         //     let e = sqlx::Error::ColumnDecode { index: "id".into(), source: Box::new(uuid_parsing_error) };
         //     return Err(e)
@@ -87,5 +87,29 @@ impl sqlx::FromRow<'_, sqlx::sqlite::SqliteRow> for Bookmark {
         let archive = if row.try_get::<i32, _>("archive")? == 0 { false } else { true };
         let trash = if row.try_get::<i32, _>("trash")? == 0 { false } else { true };
         Ok(Self { id, url, title, about, star, archive, trash })
+    }
+}
+
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+pub(crate) struct User {
+    pub(crate) id: uuid::Uuid,
+    pub(crate) name: String,
+    pub(crate) email: String,
+    pub(crate) salt: String,
+    pub(crate) hash: String,
+}
+
+#[cfg(feature = "ssr")]
+impl sqlx::FromRow<'_, sqlx::sqlite::SqliteRow> for User {
+    fn from_row(row: &sqlx::sqlite::SqliteRow) -> Result<Self, sqlx::Error> {
+        use sqlx::Row;
+        let id: &str = row.try_get("id")?;
+        let id = uuid::Uuid::try_parse(id);
+        let id = id.unwrap_or_default(); // TODO: remove
+        let name = row.try_get("name")?;
+        let email = row.try_get("email")?;
+        let salt = row.try_get("salt")?;
+        let hash = row.try_get("hash")?;
+        Ok(Self { id, name, email, salt, hash })
     }
 }

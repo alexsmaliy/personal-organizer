@@ -7,11 +7,11 @@ use crate::types::Bookmark;
 #[server(GetBookmarks, "/api", "Url", "get-bookmarks")]
 pub(super) async fn get_bookmarks() -> Result<Vec<Bookmark>, ServerFnError> {
     // serverside dependencies
-    use actix_web::{cookie::Cookie, http::{header, header::HeaderValue, StatusCode}, web::Data};
+    use actix_web::{cookie::Cookie, http::{header, header::HeaderValue, StatusCode}, HttpRequest, web::Data};
     use leptos_actix::ResponseOptions;
     use sqlx::{Pool, Sqlite};
     
-    let res = leptos_actix::extract(|pool: Data<Pool<Sqlite>>, req: actix_web::HttpRequest| async move {
+    let res = leptos_actix::extract(|pool: Data<Pool<Sqlite>>, req: HttpRequest| async move {
         // thread::sleep(Duration::from_millis(500)); // TODO: remove after testing
         let pool = pool.as_ref();
         let mut result_stream = sqlx::query_as::<_, Bookmark>("SELECT * FROM bookmark").fetch(pool);

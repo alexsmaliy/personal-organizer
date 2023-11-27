@@ -14,10 +14,12 @@ console_error_panic_hook = "0.1"
 cfg-if = "1"
 http = { version = "0.2", optional = true }
 itertools = "0.12.0"
+lazy_static = "1.4"
 leptos = { version = "0.5", features = ["nightly"] }
 leptos_meta = { version = "0.5", features = ["nightly"] }
 leptos_actix = { version = "0.5", optional = true }
 leptos_router = { version = "0.5", features = ["nightly"] }
+regex = "1.10"
 sqlx = { version = "0.7", features = [ "macros", "runtime-tokio", "sqlite", "tls-native-tls" ], optional = true  }
 wasm-bindgen = "=0.2.87"
 serde = { version = "1.0.189", features = ["derive"] }
