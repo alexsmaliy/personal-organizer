@@ -1,60 +1,11 @@
 use std::convert::From;
 use std::ops::Not;
-use lazy_static::lazy_static;
 use leptos::*;
-use leptos_router::{ActionForm, Form, FromFormData};
-use regex::Regex;
+use leptos_router::ActionForm;
 use wasm_bindgen::JsValue;
 use web_sys::SubmitEvent;
-
-#[server(SignUp, "/api", "Url", "signup")]
-pub(super) async fn sign_up(user: String, pass: String) -> Result<(), ServerFnError> {
-    // serverside dependencies
-    use actix_web::{cookie::Cookie, http::{header, header::HeaderValue, StatusCode}, HttpRequest, web::{Data, Form}};
-    use leptos_actix::ResponseOptions;
-    use sqlx::{Pool, Row, Sqlite};
-
-    std::thread::sleep(std::time::Duration::from_millis(500));
-
-    if !REGEX.is_match(&user) {
-        return Err(ServerFnError::ServerError(
-            format!("username doesn't match validation pattern: {user}")
-        ));
-    }
-
-    if !REGEX.is_match(&pass) {
-        return Err(ServerFnError::ServerError(
-            format!("password doesn't match validation pattern: {pass}")
-        ));
-    }
-
-    let res = leptos_actix::extract(|pool: Data<Pool<Sqlite>>| async move {
-        let pool = pool.as_ref();
-
-        match sqlx::query("SELECT COUNT(*) AS count FROM user WHERE name = ?").bind(&user).fetch_one(pool).await {
-            Err(err) => {
-                logging::error!("{}", err.to_string());
-                return Err(ServerFnError::ServerError("Failed to connect to DB!".into()));
-            },
-            Ok(row) => match row.try_get::<i64, _>("count") {
-                Err(err) => {
-                    logging::error!("{}", err.to_string());
-                    return Err(ServerFnError::ServerError("Error querying DB!".into()));
-                },
-                Ok(count) => {
-                    logging::log!("USER COUNT: {count}");
-                    if count > 0 {
-                        return Err(ServerFnError::ServerError("Username is taken!".into()));
-                    }
-                },
-            },
-        };
-        
-        return Ok(());
-    }).await.unwrap();
-
-    return res;
-}
+use crate::misc::constants::REGEX;
+use crate::server::SignUp;
 
 #[component]
 pub(crate) fn LoginPage() -> impl IntoView {
@@ -100,42 +51,6 @@ pub(crate) fn LoginPage() -> impl IntoView {
 #[component]
 fn SignIn() -> impl IntoView {
     "Sign in"
-}
-
-lazy_static! {
-    // 1 x (letter | number | punct | symbol | CJK | emoji)
-    // 2+ x (as above, but also any space)
-    // 1 x (letter | number | punct | symbol | CJK | emoji)
-    static ref REGEX: Regex = Regex::new("\
-        ^\
-            [\
-                \\p{Alphabetic}\
-                \\p{Decimal_Number}\
-                \\p{Punctuation}\
-                \\p{Symbol}\
-                \\p{Ideographic}\
-                \\p{Emoji}\
-            ]\
-            [\
-                \\p{Alphabetic}\
-                \\p{Decimal_Number}\
-                \\p{Punctuation}\
-                \\p{Symbol}\
-                \\p{Space_Separator}\
-                \\p{Ideographic}\
-                \\p{Emoji}\
-            ]\
-            {2,}\
-            [\
-                \\p{Alphabetic}\
-                \\p{Decimal_Number}\
-                \\p{Punctuation}\
-                \\p{Symbol}\
-                \\p{Ideographic}\
-                \\p{Emoji}\
-            ]\
-        $\
-    ").expect("validation regex didn't compile!");
 }
 
 #[component]

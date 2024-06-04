@@ -2,10 +2,10 @@ use std::time::Duration;
 use leptos::*;
 use leptos_dom::helpers::set_timeout;
 use leptos_router::use_params_map;
-use crate::functions::get_bookmarks;
-use crate::types::Bookmark;
+use crate::server::get_bookmarks;
+use crate::types::BookmarkWithTags;
 
-pub(crate) type BookmarksResource = Resource<(), Result<Vec<Bookmark>, ServerFnError>>;
+pub(crate) type BookmarksResource = Resource<(), Result<Vec<BookmarkWithTags>, ServerFnError>>;
 
 #[component]
 pub(crate) fn BookmarksProvider(children: Children) -> impl IntoView {

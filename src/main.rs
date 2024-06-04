@@ -2,7 +2,9 @@ mod app;
 mod components;
 mod db;
 mod errors;
-mod functions;
+mod middleware;
+mod misc;
+mod server;
 mod types;
 
 #[cfg(feature = "ssr")]
@@ -10,12 +12,14 @@ mod types;
 async fn main() -> std::io::Result<()> {
     use std::time::Duration;
     use actix_files::Files;
-    use actix_web::{App, HttpServer, web::Data, middleware::NormalizePath};
+    use actix_web::{App, HttpServer, middleware::NormalizePath, web::Data,};
+    use actix_web_lab::middleware::from_fn;
     use leptos::{get_configuration, logging};
     use leptos_actix::{generate_route_list, handle_server_fns, LeptosRoutes};
     use sqlx::{Executor, sqlite::{SqliteConnectOptions, SqlitePoolOptions}};
     use app::Omark;
     use db::{CONNECTION_INIT_PRAGMAS, DB_INIT_PRAGMAS, INITIALIZE_SCHEMA, SQLITE_DB_FILENAME};
+    use middleware::check_auth_for_protected_routes;
 
     let conf = get_configuration(Some("./Cargo.toml")).await.expect("unable to find Leptos config file!");
     let addr = conf.leptos_options.site_addr;
@@ -50,13 +54,14 @@ async fn main() -> std::io::Result<()> {
         let site_root = &leptos_options.site_root;
 
         App::new()
-            .wrap(NormalizePath::trim())
             .app_data(Data::new(db_pool.clone()))
             .app_data(Data::new(leptos_options.to_owned()))
+            .wrap(NormalizePath::trim())
+            .wrap(from_fn(check_auth_for_protected_routes)) // async lambda middleware
             .service(Files::new("/pkg", format!("{site_root}/pkg"))) // serve JS/WASM/CSS from `pkg`
             .service(Files::new("/assets", site_root)) // serve other assets from the `assets` directory
             .service(favicon) // serve the favicon from /favicon.ico
-            // TODO: replace with invidivual icon SVG's from https://fonts.google.com/icons
+            // TODO: replace with invidivual icon SVGs from https://fonts.google.com/icons
             .service(google_icons_woff2_font) // serve the font from /google_icons.woff2
             .route("/api/{tail:.*}", handle_server_fns())
             .leptos_routes(leptos_options.to_owned(), routes.to_owned(), Omark)

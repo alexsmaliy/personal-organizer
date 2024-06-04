@@ -58,10 +58,10 @@ fn AddModalInner() -> impl IntoView {
 
     on_cleanup(move || click_listener.remove());
 
-    let Δtitle = move |e: Event| set_title(String::from(event_target_value(&e).trim()));
-    let Δurl = move |e: Event| set_url(String::from(event_target_value(&e).trim()));
-    let Δabout = move |e: Event| set_about(String::from(event_target_value(&e).trim()));
-    let Δtags = move |e: Event| set_tags(String::from(event_target_value(&e).trim()));
+    let Δtitle = move |e: Event| set_title(event_target_value(&e).trim().into());
+    let Δurl = move |e: Event| set_url(event_target_value(&e).trim().into());
+    let Δabout = move |e: Event| set_about(event_target_value(&e).trim().into());
+    let Δtags = move |e: Event| set_tags(event_target_value(&e).trim().into());
 
     let (focused, set_focused) = create_signal(0_usize);
 

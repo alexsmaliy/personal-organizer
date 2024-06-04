@@ -1,8 +1,8 @@
 use leptos::*;
-
+use leptos_router::A;
 use crate::components::Icon;
-use crate::components::providers::BookmarksResource;
-use crate::types::Bookmark;
+use crate::components::providers::{BookmarksResource, UrlState};
+use crate::types::{Bookmark, BookmarkWithTags};
 
 #[component]
 pub(crate) fn Bookmarks() -> impl IntoView {
@@ -15,8 +15,8 @@ pub(crate) fn Bookmarks() -> impl IntoView {
                 view! {
                     <For
                         each=bookmarks
-                        key=|bookmark| bookmark.id
-                        children=move |bookmark| view! { <Bookmark bookmark /> }
+                        key=|BookmarkWithTags { bookmark, .. }| bookmark.id
+                        children=move |bookmark| view! { <BookmarkWithTags bookmark /> }
                     />
                 }
             },
@@ -41,8 +41,9 @@ pub(crate) fn Bookmarks() -> impl IntoView {
 }
 
 #[component]
-fn Bookmark(bookmark: Bookmark) -> impl IntoView {
-    let Bookmark { id: _, url, title, about, star: _, archive, trash } = bookmark;
+fn BookmarkWithTags(bookmark: BookmarkWithTags) -> impl IntoView {
+    let BookmarkWithTags { bookmark: Bookmark { url, title, about, archive, trash, .. }, tags } = bookmark;
+    let UrlState { view, .. } = expect_context();
     view! {
         <article class="bookmark">
             <div class="left">
@@ -50,8 +51,13 @@ fn Bookmark(bookmark: Bookmark) -> impl IntoView {
                     {title}
                     <Icon icon="star" classes="star" />
                 </h1>
-                <a href={format!("https://{url}")} class="url">{url}</a>
+                <A href={format!("https://{url}")} class="url">{url}</A>
                 <p class="about">{about}</p>
+                <nav>{
+                        tags.into_iter().map(|tag|
+                            view! { <A href={format!("/{}/{}", view(), tag)} class="tag">{tag}</A> })
+                        .collect_view()
+                }</nav>
             </div>
             <menu class="right">
                 <Icon icon="edit" classes="edit" />

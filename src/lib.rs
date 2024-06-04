@@ -1,6 +1,7 @@
 mod app;
 mod components;
-mod functions;
+mod misc;
+mod server;
 mod types;
 
 #[cfg(feature = "hydrate")]

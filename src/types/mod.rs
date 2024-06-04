@@ -90,6 +90,35 @@ impl sqlx::FromRow<'_, sqlx::sqlite::SqliteRow> for Bookmark {
     }
 }
 
+#[cfg(feature = "ssr")]
+impl sqlx::FromRow<'_, sqlx::sqlite::SqliteRow> for BookmarkWithTags {
+    fn from_row(row: &sqlx::sqlite::SqliteRow) -> Result<Self, sqlx::Error> {
+        use sqlx::Row;
+        let id: &str = row.try_get("id")?;
+        let id = uuid::Uuid::try_parse(id);
+        // let v: Box<dyn Display> = Box::new(AppView::ALL);
+        // if let Err(uuid_parsing_error) = id {
+        //     let e = sqlx::Error::ColumnDecode { index: "id".into(), source: Box::new(uuid_parsing_error) };
+        //     return Err(e)
+        // }
+        let id = id.unwrap_or_default(); // TODO: remove
+        let url: String = row.try_get("url")?;
+        let title: String = row.try_get("title")?;
+        let about: String = row.try_get("about")?;
+        let star = if row.try_get::<i32, _>("star")? == 0 { false } else { true };
+        let archive = if row.try_get::<i32, _>("archive")? == 0 { false } else { true };
+        let trash = if row.try_get::<i32, _>("trash")? == 0 { false } else { true };
+        let tags = row.try_get("tags")?;
+        let tags = match serde_json::from_str::<'_, Vec<String>>(tags) {
+            Ok(tags) => Ok(tags),
+            Err(e) => Err(sqlx::Error::ColumnDecode { index: "tags".into(), source: Box::new(e) }),
+        };
+        let bookmark = Bookmark { id, url, title, about, star, archive, trash };
+        let tags = tags?;
+        Ok(BookmarkWithTags { bookmark, tags })
+    }
+}
+
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub(crate) struct User {
     pub(crate) id: uuid::Uuid,

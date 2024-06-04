@@ -16,7 +16,7 @@ pub(crate) fn Hotkeys() -> impl IntoView {
             match ev.key().as_ref() {
                 "h" => (!event_target::<EventTarget>(&ev).has_type::<HtmlInputElement>())
                             .then(|| go("/home", NavigateOptions::default())), // TODO: get home from settings
-                "k" => ev.meta_key()
+                "k" => ev.ctrl_key()
                             .then(|| command_modal.open()),
                 "m" => (!event_target::<EventTarget>(&ev).has_type::<HtmlInputElement>())
                             .then(|| left_menu.toggle()),

@@ -3,7 +3,7 @@ use leptos_router::*;
 
 use crate::components::{AddModal, Bookmarks, CommandModal, Hotkeys, LeftMenu, SettingsModal, TopMenu};
 use crate::components::providers::{BookmarksProvider, BookmarksResource, CommandModalState, MenuState, MenuStateProvider, UrlStateProvider, UrlState};
-use crate::functions::get_bookmarks;
+use crate::server::get_bookmarks;
 use crate::types::Bookmark;
 
 fn session() {
